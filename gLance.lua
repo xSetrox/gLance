@@ -1,17 +1,59 @@
-require("natives-1627063482") -- da natives
-require("lua_imGUI V3")
+-- TOUCH THESE
+background_color = {
+    r = 0.0,
+    g = 0.0,
+    b = 0.0,
+    a = 0.6
+}
+highlight_color = {
+    r = 1.0,
+    g = 1.0,
+    b = 1.0,
+    a = 0.7
+}
+subhead_color = {
+    r = 1.0,
+    g = 1.0,
+    b = 1.0,
+    a = 1.0
+}
+label_color = {
+    r = 1.0,
+    g = 1.0,
+    b = 1.0,
+    a = 1.0
+}
+header_color = {
+    r = 0.2,
+    g = 0.2,
+    b = 0.2,
+    a = 0.6
+}
+blur_background = true
 
-glance = UI.new()
-glance.set_background_colour(0, 0, 0)
-glance.set_highlight_colour(1, 1, 1)
-local white = {r = 1, g = 1, b = 1, a = 1}
+-- DO NOT TOUCH ANYTHING BELOW
+-- UNLESS OF COURSE YOU KNOW WHAT YOU ARE DOING!
+
+require("natives-1627063482") -- da natives
+require("imgui_for_glance")
+function reinit_window()
+    glance = UI.new()
+    glance.set_background_colour(background_color.r, background_color.g, background_color.b, background_color.a)
+    glance.set_highlight_colour(highlight_color.r, highlight_color.g, highlight_color.b, highlight_color.a)
+    glance.set_header_colour(header_color.r, header_color.g, header_color.b, header_color.a)
+    glance.set_blur_strength(blur_strength)
+    glance.set_should_use_blur(blur_background)
+end
+
+reinit_window()
+--local label_color = {r = 1, g = 1, b = 1, a = 1}
 local green = {r = 0, g = 1, b = 0, a = 1}
 local red = {r = 1, g = 0, b = 0, a = 1}
-local cyan = {r= 0, g = 1, b = 1, a = 1}
 local black = {r = 0, g = 0, b = 0, a = 1}
 local purple = {r = 0.5, g = 0, b= 0.5, a = 1}
 local brighter_purple = {r = 0.7, g = 0, b = 0.7, a = 1}
 local darker_red = {r = 0.5, g = 0, b = 0, a  = 1}
+
 -- credits to https://stackoverflow.com/questions/10989788/format-integer-in-lua
 function format_int(number)
     local i, j, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
@@ -74,21 +116,48 @@ local languages = {
 [11] = "Mexican",
 [12] = "Chinese (Simplified)"
 }
-
+blur_strength = 10
 overlay_x_offset = 0.00
+overlay_y_offset = 0.00
+
 x_offset_slider = menu.slider_float(menu.my_root(), "Overlay X Offset", {"glancexoffset"}, "", -1000, 1000, 0, 1, function(s)
     overlay_x_offset = s * 0.001
-    glance = UI.new()
-    glance.set_background_colour(0, 0, 0)
-    glance.set_highlight_colour(1, 1, 1)
+    reinit_window()
 end)
 
-overlay_y_offset = 0.00
 y_offset_slider = menu.slider_float(menu.my_root(), "Overlay Y Offset", {"glanceyoffset"}, "", -1000, 1000, 0, 1, function(s)
     overlay_y_offset = s * 0.001
-    glance = UI.new()
-    glance.set_background_colour(0, 0, 0)
-    glance.set_highlight_colour(1, 1, 1)
+    reinit_window()
+end)
+
+blur_slider = menu.slider(menu.my_root(), "Blur strength", {"glanceblurstrength"}, "Note that this is very resource-heavy and may drop your frames at high values.", 0, 255, 10, 1, function(s)
+    blur_strength = s
+    reinit_window()
+end)
+
+color1 = menu.colour(menu.my_root(), "Background colour", {"glancebgcolor"}, "", background_color, true, function(on_change)
+    background_color = on_change
+    reinit_window()
+end)
+
+color2 = menu.colour(menu.my_root(), "Highlight colour", {"glancehighcolor"}, "", highlight_color, true, function(on_change)
+    highlight_color = on_change
+    reinit_window()
+end)
+
+color3 = menu.colour(menu.my_root(), "Subhead colour", {"glancesubheadcolor"}, "", subhead_color, true, function(on_change)
+    subhead_color = on_change
+    reinit_window()
+end)
+
+color4 = menu.colour(menu.my_root(), "Label colour", {"glancelabelcolor"}, "", label_color, true, function(on_change)
+    label_color = on_change
+    reinit_window()
+end)
+
+color5 = menu.colour(menu.my_root(), "Header colour", {"glanceheadercolor"}, "", header_color, true, function(on_change)
+    header_color = on_change
+    reinit_window()
 end)
 
 x_offset_focused = false
@@ -110,6 +179,60 @@ menu.on_blur(y_offset_slider, function()
     y_offset_focused = false
 end)
 
+blur_slider_focused = false
+menu.on_focus(blur_slider, function()
+    blur_slider_focused = true
+end)
+
+menu.on_blur(blur_slider, function()
+    blur_slider_focused = false
+end)
+
+color1_focused = false
+menu.on_focus(color1, function()
+    color1_focused = true
+end)
+
+menu.on_blur(color1, function()
+    color1_focused = false
+end)
+
+color2_focused = false
+menu.on_focus(color2, function()
+    color2_focused = true
+end)
+
+menu.on_blur(color2, function()
+    color2_focused = false
+end)
+
+color3_focused = false
+menu.on_focus(color3, function()
+    color3_focused = true
+end)
+
+menu.on_blur(color3, function()
+    color3_focused = false
+end)
+
+color4_focused = false
+menu.on_focus(color4, function()
+    color4_focused = true
+end)
+
+menu.on_blur(color4, function()
+    color4_focused = false
+end)
+
+color5_focused = false
+menu.on_focus(color5, function()
+    color4_focused = true
+end)
+
+menu.on_blur(color5, function()
+    color5_focused = false
+end)
+
 
 all_weapons = {}
 temp_weapons = util.get_weapons()
@@ -126,75 +249,6 @@ function get_weapon_name_from_hash(hash)
     return 'None'
 end
 
--- credit to nowiry
-local function get_offset_from_camera(distance)
-    local cam_rot = CAM.GET_GAMEPLAY_CAM_ROT(0)
-    local cam_pos = CAM.GET_GAMEPLAY_CAM_COORD()
-    cam_pos.z = cam_pos.z + 1.7
-    local direction = v3.toDir(cam_rot)
-    local destination = 
-    { 
-        x = cam_pos.x + direction.x * distance, 
-        y = cam_pos.y + direction.y * distance, 
-        z = cam_pos.z + direction.z * distance 
-    }
-    return destination
-end
-
-function request_model_load(hash)
-    request_time = os.time()
-    if not STREAMING.IS_MODEL_VALID(hash) then
-        return
-    end
-    STREAMING.REQUEST_MODEL(hash)
-    while not STREAMING.HAS_MODEL_LOADED(hash) do
-        if os.time() - request_time >= 10 then
-            break
-        end
-        util.yield()
-    end
-end
-
---util.create_thread(function()
---    local ped_preview_ang = 0 
---    local last_focused = nil
---    local last_focused_preview_ped = 0
---    while true do 
---        local focused_tbl = players.get_focused()
---        if focused_tbl[1] ~= nil and menu.is_open() or (y_offset_focused or x_offset_focused) then
---            if (y_offset_focused or x_offset_focused) then 
---                focused = players.user()
---            else
---                focused = focused_tbl[1]
---            end
---            if last_focused ~= focused then 
---                entities.delete(last_focused_preview_ped)
---                last_focused = focused
---                local c = get_offset_from_camera(10)
---                local hash = ENTITY.GET_ENTITY_MODEL(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(focused))
---                request_model_load(hash)
---                last_focused_preview_ped = entities.create_ped(28, hash, c, ped_preview_ang)
---                PED.CLONE_PED_TO_TARGET(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(focused), last_focused_preview_ped)
---                ENTITY.SET_ENTITY_COORDS(last_focused_preview_ped, c.x, c.y, c.z, false, false, false, false)
---                ENTITY.SET_ENTITY_ALPHA(last_focused_preview_ped, 100, false)
---                ENTITY.SET_ENTITY_INVINCIBLE(last_focused_preview_ped, true)
---            else
---                local c = get_offset_from_camera(10)
---                ENTITY.SET_ENTITY_COORDS(last_focused_preview_ped, c.x, c.y, c.z, false, false, false, false)
---                if ped_preview_ang >= 360 then 
---                    ped_preview_ang = 0 
---                end
---                ENTITY.SET_ENTITY_ROTATION(last_focused_preview_ped, 0.0, 0.0, ped_preview_ang, 0, true)
---                ped_preview_ang += 1
---            end
---        else
---            entities.delete(last_focused_preview_ped)
---            last_focused = nil
---        end
---        util.yield()
---    end
---end)
-
 -- shamelessly stolen from keks
 function dec_to_ipv4(ip)
 	return string.format(
@@ -207,13 +261,13 @@ function dec_to_ipv4(ip)
 end
 
 while true do
-    if not util.is_session_transition_active() and NETWORK.NETWORK_IS_SESSION_STARTED() then
+    if not util.is_session_transition_active() then
         local focused_tbl = players.get_focused()
-        if focused_tbl[1] ~= nil and menu.is_open() or (y_offset_focused or x_offset_focused) then 
+        if focused_tbl[1] ~= nil and menu.is_open() or (y_offset_focused or x_offset_focused or blur_slider_focused or color1_focused or color2_focused or color3_focused or color4_focused) then 
             if PAD.IS_CONTROL_JUST_PRESSED(2, 29) then
                 glance.toggle_cursor_mode()
             end
-            if (y_offset_focused or x_offset_focused) then 
+            if (y_offset_focused or x_offset_focused or blur_slider_focused  or color1_focused or color2_focused or color3_focused or color4_focused) then 
                 focused = players.user()
             else
                 focused = focused_tbl[1]
@@ -223,90 +277,90 @@ while true do
             local playername = players.get_name(focused)
             local m_x, m_y = menu.get_position()
             glance.begin(playername, m_x - 0.3 + overlay_x_offset, m_y + overlay_y_offset)
-            glance.subhead("Player")
+            glance.subhead("Player", subhead_color)
             glance.start_horizontal()
             local script_host = players.get_script_host()
             local host = players.get_host()
         
-            glance.label("Host: ", bool_to_yes_no(focused == host), white, conditional_color(focused == host))
+            glance.label("Host: ", bool_to_yes_no(focused == host), label_color, conditional_color(focused == host))
             glance.divider()
-            glance.label("Script host: ", bool_to_yes_no(focused == script_host), white, conditional_color(focused == script_host))
+            glance.label("Script host: ", bool_to_yes_no(focused == script_host), label_color, conditional_color(focused == script_host))
             glance.divider()
-            glance.label("Modder: ", bool_to_yes_no(players.is_marked_as_modder(focused)), white, conditional_color(players.is_marked_as_modder(focused)))
+            glance.label("Modder: ", bool_to_yes_no(players.is_marked_as_modder(focused)), label_color, conditional_color(players.is_marked_as_modder(focused)))
             glance.divider()
-            glance.label("Atk\'d you: ", bool_to_yes_no(players.is_marked_as_attacker(focused)), white, conditional_color(players.is_marked_as_attacker(focused)))
+            glance.label("Atk\'d you: ", bool_to_yes_no(players.is_marked_as_attacker(focused)), label_color, conditional_color(players.is_marked_as_attacker(focused)))
             glance.end_horizontal()
             glance.start_horizontal()
-            glance.label("Wallet: ", '$' .. format_int(players.get_wallet(focused)), white, green)
+            glance.label("Wallet: ", '$' .. format_int(players.get_wallet(focused)), label_color, green)
             glance.divider()
-            glance.label("Bank: ", '$' .. format_int(players.get_bank(focused)), white, green)
+            glance.label("Bank: ", '$' .. format_int(players.get_bank(focused)), label_color, green)
             glance.divider()
-            glance.label("Total: ", '$' .. format_int(players.get_money(focused)), white, green)
+            glance.label("Total: ", '$' .. format_int(players.get_money(focused)), label_color, green)
             glance.end_horizontal()
             local tags = players.get_tags_string(focused)
             if tags == "" then 
                 tags = "None"
             end
             glance.start_horizontal()
-            glance.label('Tags: ', tags, white, cyan)
+            glance.label('Tags: ', tags, label_color, cyan)
             glance.end_horizontal()
             local rid = players.get_rockstar_id(focused)
             local rid2 = players.get_rockstar_id_2(focused)
             glance.start_horizontal()
-            glance.label("RID: ", if rid == rid2 then rid else rid .. '/' .. rid2, white, cyan)
+            glance.label("RID: ", if rid == rid2 then rid else rid .. '/' .. rid2, label_color, cyan)
             glance.end_horizontal()
             glance.start_horizontal()
-            glance.label("IP: ", dec_to_ipv4(players.get_connect_ip(focused)), white, cyan)
+            glance.label("IP: ", dec_to_ipv4(players.get_connect_ip(focused)), label_color, cyan)
             glance.end_horizontal()
             glance.start_horizontal()
-            glance.label("Rank: ", players.get_rank(focused), white, cyan)
+            glance.label("Rank: ", players.get_rank(focused), label_color, cyan)
             glance.end_horizontal()
             local kd = tonumber(string.format("%.2f", players.get_kd(focused)))
             glance.start_horizontal()
-            glance.label("K/D: ", kd, white, cyan)
+            glance.label("K/D: ", kd, label_color, cyan)
             glance.end_horizontal()
             glance.start_horizontal()
-            glance.label("Wanted level: ", PLAYER.GET_PLAYER_WANTED_LEVEL(focused), white, cyan)
+            glance.label("Wanted level: ", PLAYER.GET_PLAYER_WANTED_LEVEL(focused), label_color, cyan)
             glance.end_horizontal()
             glance.start_horizontal()
-            glance.label("Language: ", languages[players.get_language(focused)], white, cyan)
+            glance.label("Language: ", languages[players.get_language(focused)], label_color, cyan)
             glance.end_horizontal()
             if focused == players.user() then
                 glance.start_horizontal()
-                glance.label("Is femboy: ", "Yes", white, green)
+                glance.label("Is femboy: ", "Yes", label_color, green)
                 glance.end_horizontal()
             end
             glance.text(" ")
             if ENTITY.DOES_ENTITY_EXIST(ped) then 
-                glance.subhead("Character")
+                glance.subhead("Character", subhead_color)
                 glance.start_horizontal()
-                glance.label("X: ", math.floor(playerpos.x), white, cyan)
+                glance.label("X: ", math.floor(playerpos.x), label_color, cyan)
                 glance.divider()
-                glance.label("Y: ", math.floor(playerpos.y), white, cyan)
+                glance.label("Y: ", math.floor(playerpos.y), label_color, cyan)
                 glance.divider()
-                glance.label("Z: ", math.floor(playerpos.z), white, cyan)
+                glance.label("Z: ", math.floor(playerpos.z), label_color, cyan)
                 glance.end_horizontal()
                 glance.start_horizontal()
                 local c1 = players.get_position(players.user())
                 local c2 = players.get_position(focused)
-                glance.label("Distance to you: ", math.ceil(MISC.GET_DISTANCE_BETWEEN_COORDS(c1.x, c1.y, c1.z, c2.x, c2.y, c2.z)), white, cyan)
+                glance.label("Distance to you: ", math.ceil(MISC.GET_DISTANCE_BETWEEN_COORDS(c1.x, c1.y, c1.z, c2.x, c2.y, c2.z)), label_color, cyan)
                 glance.end_horizontal()
                 glance.start_horizontal()
                 local health_perc = ENTITY.GET_ENTITY_HEALTH(ped) / ENTITY.GET_ENTITY_MAX_HEALTH(ped)
                 local hp_color = do_percentage_scale_color(health_perc)
-                glance.label("Health: ", tostring(ENTITY.GET_ENTITY_HEALTH(ped)) .. '/' .. tostring(ENTITY.GET_ENTITY_MAX_HEALTH(ped)), white, hp_color)
+                glance.label("Health: ", tostring(ENTITY.GET_ENTITY_HEALTH(ped)) .. '/' .. tostring(ENTITY.GET_ENTITY_MAX_HEALTH(ped)), label_color, hp_color)
                 glance.divider()
                 local armor_perc = PED.GET_PED_ARMOUR(ped)/PLAYER.GET_PLAYER_MAX_ARMOUR(pid)
                 local armor_color = do_percentage_scale_color(armor_perc)
-                glance.label("Armor: ", tostring(PED.GET_PED_ARMOUR(ped)) .. '/' .. tostring(PLAYER.GET_PLAYER_MAX_ARMOUR(pid)), white, armor_color)
+                glance.label("Armor: ", tostring(PED.GET_PED_ARMOUR(ped)) .. '/' .. tostring(PLAYER.GET_PLAYER_MAX_ARMOUR(pid)), label_color, armor_color)
                 glance.divider()
-                glance.label("Godmode: ", bool_to_yes_no(players.is_godmode(focused)), white, conditional_color(players.is_godmode(focused)))
+                glance.label("Godmode: ", bool_to_yes_no(players.is_godmode(focused)), label_color, conditional_color(players.is_godmode(focused)))
                 glance.end_horizontal()
                 glance.start_horizontal()
-                glance.label("In interior: ", bool_to_yes_no(players.is_in_interior(focused)), white, conditional_color(players.is_in_interior(focused)))
+                glance.label("In interior: ", bool_to_yes_no(players.is_in_interior(focused)), label_color, conditional_color(players.is_in_interior(focused)))
                 glance.end_horizontal()
                 glance.start_horizontal()
-                glance.label("Off the radar: ", bool_to_yes_no(players.is_otr(focused)), white, conditional_color(players.is_otr(focused)))
+                glance.label("Off the radar: ", bool_to_yes_no(players.is_otr(focused)), label_color, conditional_color(players.is_otr(focused)))
                 glance.end_horizontal()
                 local vehicle = players.get_vehicle_model(focused)
                 if vehicle == 0 then 
@@ -316,19 +370,19 @@ while true do
                 end
                 glance.start_horizontal()
 
-                glance.label("Vehicle: ", disp_vehicle, white, none_conditional_color(disp_vehicle)) 
+                glance.label("Vehicle: ", disp_vehicle, label_color, none_conditional_color(disp_vehicle)) 
                 glance.end_horizontal()
                 glance.text(" ")
-                glance.subhead("Weapon")
+                glance.subhead("Weapon", subhead_color)
                 local wep_hash = WEAPON.GET_SELECTED_PED_WEAPON(ped)
                 glance.start_horizontal()
                 local wep_name =  get_weapon_name_from_hash(wep_hash)
-                glance.label("Weapon: ", wep_name, white, none_conditional_color(wep_name))
+                glance.label("Weapon: ", wep_name, label_color, none_conditional_color(wep_name))
                 glance.end_horizontal()
                 glance.start_horizontal()
                 local ammo_in_clip_alloc = memory.alloc_int()
                 WEAPON.GET_AMMO_IN_CLIP(ped, wep_hash, ammo_in_clip_alloc)
-                glance.label("Clip: ", memory.read_int(ammo_in_clip_alloc) .. '/' .. WEAPON.GET_MAX_AMMO_IN_CLIP(ped, wep_hash, true), white, cyan)
+                glance.label("Clip: ", memory.read_int(ammo_in_clip_alloc) .. '/' .. WEAPON.GET_MAX_AMMO_IN_CLIP(ped, wep_hash, true), label_color, cyan)
                 glance.end_horizontal()
             end
             glance.text(" ")

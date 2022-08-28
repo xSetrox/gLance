@@ -7,10 +7,10 @@ UI.new = function()
     local self = {}
 
     background_colour = {
-        ["r"] = 0.1,
-        ["g"] = 0.1,
-        ["b"] = 0.1,
-        ["a"] = 1
+        r = 0.1,
+        g = 0.1,
+        b = 0.1,
+        a = 0.5
     }
 
     --gray colour for the header
@@ -18,7 +18,7 @@ UI.new = function()
         ["r"] = 0.2,
         ["g"] = 0.2,
         ["b"] = 0.2,
-        ["a"] = 1
+        ["a"] = 0.5
     }
 
     -- text colour
@@ -163,8 +163,6 @@ UI.new = function()
                         directx.draw_texture(tabs[i].data.icon, button_size.x * 0.4, button_size.x * 0.4, -0.1, 0.5, button_drawpos.x, button_drawpos.y + button_size.y * 0.5, 0, text_colour)
                     end
         end
-
-
     end
 
     local function add_with_and_height(width, height, horizontal)
@@ -319,16 +317,32 @@ UI.new = function()
     end
 
     -- SETTERS
-    self.set_background_colour = function(r, g, b)
-        background_colour = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = 1}
+    self.set_background_colour = function(r, g, b, a)
+        background_colour = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a}
     end
-    self.set_highlight_colour = function(r, g, b)
-        highlight_colour = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = 1}
+    self.set_highlight_colour = function(r, g, b, a)
+        highlight_colour = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a}
     end
     self.set_text_colour = function(r, g, b)
-        text_colour = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = 1}
+        text_colour = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a}
     end
-    -- OTHER METHODS
+
+    self.set_header_colour = function(r, g, b, a)
+        header_colour = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a}
+    end
+
+    self.set_label_colour = function(r, g, b, a)
+        label_colour = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a}
+    end
+
+
+    self.set_should_use_blur = function(blur_toggle)
+        should_blur = blur_toggle 
+    end
+
+    self.set_blur_strength = function(blur_st)
+        blur_strength = blur_st
+    end
 
     --enable or disable the cursor
     self.toggle_cursor_mode = function(state)
@@ -656,20 +670,15 @@ UI.new = function()
     --finish and draw the window
     self.finish = function()
         directx.draw_rect(
-            temp_x - 0.005,
-            temp_y - 0.005,
-            current_window.width + 0.01,
-            current_window.height + 0.01,
-            highlight_colour
-        )
-        directx.draw_rect(
             temp_x - 0.004,
             temp_y - 0.004,
             current_window.width + 0.008,
             current_window.height + 0.008,
             background_colour
         )
-        directx.draw_rect(temp_x - 0.004, temp_y - 0.004, current_window.width + 0.008, 0.03, gray_colour)
+        local window_blur = directx.blurrect_new()
+        directx.blurrect_draw(window_blur, temp_x - 0.004, temp_y - 0.004, current_window.width + 0.008, current_window.height + 0.008, blur_strength)
+        directx.draw_rect(temp_x - 0.004, temp_y - 0.004, current_window.width + 0.008, 0.03, header_colour)
 
         directx.draw_text(
             temp_x + current_window.width * 0.5,
