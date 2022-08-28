@@ -678,6 +678,7 @@ UI.new = function()
         )
         local window_blur = directx.blurrect_new()
         directx.blurrect_draw(window_blur, temp_x - 0.004, temp_y - 0.004, current_window.width + 0.008, current_window.height + 0.008, blur_strength)
+        directx.blurrect_free(window_blur)
         directx.draw_rect(temp_x - 0.004, temp_y - 0.004, current_window.width + 0.008, 0.03, header_colour)
 
         directx.draw_text(

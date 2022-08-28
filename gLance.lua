@@ -260,6 +260,8 @@ function dec_to_ipv4(ip)
 	)
 end
 
+local ammo_in_clip_alloc = memory.alloc_int()
+
 while true do
     if not util.is_session_transition_active() then
         local focused_tbl = players.get_focused()
@@ -380,7 +382,6 @@ while true do
                 glance.label("Weapon: ", wep_name, label_color, none_conditional_color(wep_name))
                 glance.end_horizontal()
                 glance.start_horizontal()
-                local ammo_in_clip_alloc = memory.alloc_int()
                 WEAPON.GET_AMMO_IN_CLIP(ped, wep_hash, ammo_in_clip_alloc)
                 glance.label("Clip: ", memory.read_int(ammo_in_clip_alloc) .. '/' .. WEAPON.GET_MAX_AMMO_IN_CLIP(ped, wep_hash, true), label_color, cyan)
                 glance.end_horizontal()
