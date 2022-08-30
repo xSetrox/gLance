@@ -1,4 +1,3 @@
--- TOUCH THESE
 background_color = {
     r = 0.0,
     g = 0.0,
@@ -30,8 +29,7 @@ header_color = {
     a = 0.6
 }
 
--- DO NOT TOUCH ANYTHING BELOW
--- UNLESS OF COURSE YOU KNOW WHAT YOU ARE DOING!
+blur_strength = 0
 
 require("natives-1627063482") -- da natives
 require("imgui_for_glance")
