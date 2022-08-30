@@ -1,5 +1,5 @@
 # gLance
-![gLance](https://i.imgur.com/VUfKrdo.png)
+![gLance](https://lance.is-terrible.com/5FVG2ZcTX.jpeg)
 ### All your player information, in a glance.  
 Glance adds the "popout-menu-when-player-highlighted" thing that Stand never had. As well as some aggressively detailed information. Plus some cool buttons. It's pretty awesome.
 
