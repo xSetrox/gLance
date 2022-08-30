@@ -29,7 +29,6 @@ header_color = {
     b = 0.2,
     a = 0.6
 }
-blur_background = true
 
 -- DO NOT TOUCH ANYTHING BELOW
 -- UNLESS OF COURSE YOU KNOW WHAT YOU ARE DOING!
@@ -42,7 +41,11 @@ function reinit_window()
     glance.set_highlight_colour(highlight_color.r, highlight_color.g, highlight_color.b, highlight_color.a)
     glance.set_header_colour(header_color.r, header_color.g, header_color.b, header_color.a)
     glance.set_blur_strength(blur_strength)
-    glance.set_should_use_blur(blur_background)
+    if blur_strength > 0 then 
+        glance.set_should_use_blur(true)
+    else 
+        glance.set_should_use_blur(false)
+    end
 end
 
 reinit_window()
