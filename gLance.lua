@@ -38,12 +38,6 @@ function reinit_window()
     glance.set_background_colour(background_color.r, background_color.g, background_color.b, background_color.a)
     glance.set_highlight_colour(highlight_color.r, highlight_color.g, highlight_color.b, highlight_color.a)
     glance.set_header_colour(header_color.r, header_color.g, header_color.b, header_color.a)
-    glance.set_blur_strength(blur_strength)
-    if blur_strength > 0 then 
-        glance.set_should_use_blur(true)
-    else 
-        glance.set_should_use_blur(false)
-    end
 end
 
 reinit_window()
@@ -117,7 +111,6 @@ local languages = {
 [11] = "Mexican",
 [12] = "Chinese (Simplified)"
 }
-blur_strength = 10
 overlay_x_offset = 0.00
 overlay_y_offset = 0.00
 
@@ -128,11 +121,6 @@ end)
 
 y_offset_slider = menu.slider_float(menu.my_root(), "Overlay Y Offset", {"glanceyoffset"}, "", -1000, 1000, 0, 1, function(s)
     overlay_y_offset = s * 0.001
-    reinit_window()
-end)
-
-blur_slider = menu.slider(menu.my_root(), "Blur strength", {"glanceblurstrength"}, "Note that this is very resource-heavy and may drop your frames at high values.", 0, 255, 10, 1, function(s)
-    blur_strength = s
     reinit_window()
 end)
 
@@ -178,15 +166,6 @@ end)
 
 menu.on_blur(y_offset_slider, function()
     y_offset_focused = false
-end)
-
-blur_slider_focused = false
-menu.on_focus(blur_slider, function()
-    blur_slider_focused = true
-end)
-
-menu.on_blur(blur_slider, function()
-    blur_slider_focused = false
 end)
 
 color1_focused = false
@@ -266,7 +245,7 @@ local ammo_in_clip_alloc = memory.alloc_int()
 while true do
     if not util.is_session_transition_active() then
         local focused_tbl = players.get_focused()
-        if focused_tbl[1] ~= nil and menu.is_open() or (y_offset_focused or x_offset_focused or blur_slider_focused or color1_focused or color2_focused or color3_focused or color4_focused) then 
+        if focused_tbl[1] ~= nil and menu.is_open() or (y_offset_focused or x_offset_focused or color1_focused or color2_focused or color3_focused or color4_focused) then 
             if PAD.IS_CONTROL_JUST_PRESSED(2, 29) then
                 glance.toggle_cursor_mode()
             end

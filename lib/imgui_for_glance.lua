@@ -336,14 +336,6 @@ UI.new = function()
     end
 
 
-    self.set_should_use_blur = function(blur_toggle)
-        should_blur = blur_toggle 
-    end
-
-    self.set_blur_strength = function(blur_st)
-        blur_strength = blur_st
-    end
-
     --enable or disable the cursor
     self.toggle_cursor_mode = function(state)
         if state == nil then
@@ -674,10 +666,6 @@ UI.new = function()
             current_window.height + 0.008,
             background_colour
         )
-        if should_blur then
-            local window_blur = directx.blurrect_new()
-            directx.blurrect_draw(window_blur, temp_x - 0.004, temp_y - 0.004, current_window.width + 0.008, current_window.height + 0.008, blur_strength)
-        end
         directx.draw_rect(temp_x - 0.004, temp_y - 0.004, current_window.width + 0.008, 0.03, header_colour)
 
         directx.draw_text(
