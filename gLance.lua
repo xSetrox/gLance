@@ -31,8 +31,8 @@ header_color = {
 
 blur_strength = 0
 
-require("natives-1627063482") -- da natives
 require("imgui_for_glance")
+
 function reinit_window()
     glance = UI.new()
     glance.set_background_colour(background_color.r, background_color.g, background_color.b, background_color.a)
@@ -368,9 +368,9 @@ while true do
             end
             glance.text(" ")
             glance.start_horizontal()
+            local player_coords = players.get_position(focused)
             if glance.button("Teleport to", purple, brighter_purple) then
-                local c = players.get_position(focused)
-                PED.SET_PED_COORDS_KEEP_VEHICLE(players.user_ped(), c.x, c.y, c.z)
+                PED.SET_PED_COORDS_KEEP_VEHICLE(players.user_ped(), player_coords.x, player_coords.y, player_coords.z)
             end
             if glance.button("Kick", red, darker_red) then
                 menu.trigger_commands("kick " .. players.get_name(focused))
@@ -380,6 +380,10 @@ while true do
             end
             glance.end_horizontal()
             glance.finish()
+            HUD.LOCK_MINIMAP_POSITION(player_coords.x, player_coords.y)
+            HUD.SET_FAKE_PAUSEMAP_PLAYER_POSITION_THIS_FRAME(player_coords.x, player_coords.y)
+        else
+            HUD.UNLOCK_MINIMAP_POSITION()
         end
     end
     util.yield() -- keeps the script running at all times.
